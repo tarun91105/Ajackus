@@ -1,0 +1,22 @@
+[
+  { "id": 1, "firstName": "Alice", "lastName": "Smith", "email": "alice.smith@example.com", "department": "HR", "role": "Manager" },
+  { "id": 2, "firstName": "Bob", "lastName": "Johnson", "email": "bob.johnson@example.com", "department": "Finance", "role": "Analyst" },
+  { "id": 3, "firstName": "Charlie", "lastName": "Williams", "email": "charlie.williams@example.com", "department": "Engineering", "role": "Developer" },
+  { "id": 4, "firstName": "Diana", "lastName": "Brown", "email": "diana.brown@example.com", "department": "Sales", "role": "Executive" },
+  { "id": 5, "firstName": "Ethan", "lastName": "Davis", "email": "ethan.davis@example.com", "department": "Marketing", "role": "Coordinator" },
+  { "id": 6, "firstName": "Fiona", "lastName": "Miller", "email": "fiona.miller@example.com", "department": "HR", "role": "Recruiter" },
+  { "id": 7, "firstName": "George", "lastName": "Wilson", "email": "george.wilson@example.com", "department": "Engineering", "role": "Team Lead" },
+  { "id": 8, "firstName": "Hannah", "lastName": "Moore", "email": "hannah.moore@example.com", "department": "Finance", "role": "Accountant" },
+  { "id": 9, "firstName": "Ian", "lastName": "Taylor", "email": "ian.taylor@example.com", "department": "Support", "role": "Technician" },
+  { "id": 10, "firstName": "Jasmine", "lastName": "Anderson", "email": "jasmine.anderson@example.com", "department": "Marketing", "role": "Manager" },
+  { "id": 11, "firstName": "Kevin", "lastName": "Thomas", "email": "kevin.thomas@example.com", "department": "Sales", "role": "Executive" },
+  { "id": 12, "firstName": "Laura", "lastName": "Jackson", "email": "laura.jackson@example.com", "department": "Engineering", "role": "DevOps" },
+  { "id": 13, "firstName": "Mike", "lastName": "White", "email": "mike.white@example.com", "department": "Support", "role": "Engineer" },
+  { "id": 14, "firstName": "Nina", "lastName": "Harris", "email": "nina.harris@example.com", "department": "HR", "role": "Coordinator" },
+  { "id": 15, "firstName": "Oscar", "lastName": "Martin", "email": "oscar.martin@example.com", "department": "Finance", "role": "Manager" },
+  { "id": 16, "firstName": "Pam", "lastName": "Thompson", "email": "pam.thompson@example.com", "department": "Sales", "role": "Lead" },
+  { "id": 17, "firstName": "Quincy", "lastName": "Garcia", "email": "quincy.garcia@example.com", "department": "Engineering", "role": "Developer" },
+  { "id": 18, "firstName": "Rachel", "lastName": "Martinez", "email": "rachel.martinez@example.com", "department": "Support", "role": "Specialist" },
+  { "id": 19, "firstName": "Steve", "lastName": "Robinson", "email": "steve.robinson@example.com", "department": "HR", "role": "Executive" },
+  { "id": 20, "firstName": "Tina", "lastName": "Clark", "email": "tina.clark@example.com", "department": "Engineering", "role": "Intern" }
+]

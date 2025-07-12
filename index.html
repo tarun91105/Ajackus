@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Directory</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Employee Directory</h1>
+    <input type="text" id="searchInput" placeholder="Search by name or email" />
+    <button class="search-btn" onclick="applySearch()">Search</button>
+  </header>
+
+  <section class="controls">
+    <select id="sortSelect" onchange="sortEmployees()">
+      <option value="">--Sort By--</option>
+      <option value="firstName">First Name</option>
+      <option value="department">Department</option>
+    </select>
+    <select id="pageSize" onchange="changePageSize()">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    <button class="add-employee-btn" onclick="openForm()">Add Employee</button>
+    <button class="filter-employee-btn" onclick="openFilterPopup()">Filter Employees</button>
+    <button class="reset-employee-btn" onclick="resetEmployees()">Reset Employees</button>
+  </section>
+
+  <main id="employeeList"></main>
+  <div class="pagination" id="paginationControls"></div>
+
+  <!-- Employee Form Modal -->
+  <div class="modal" id="employeeForm">
+    <div class="modal-content">
+      <h2 id="formTitle">Add Employee</h2>
+      <label>First name <input type="text" id="firstName" /></label>
+      <label>Last name <input type="text" id="lastName" /></label>
+      <label>Email <input type="email" id="email" /></label>
+      <label>Department <input type="text" id="department" /></label>
+      <label>Role <input type="text" id="role" /></label>
+      <div class="form-actions">
+        <button class="cancel-btn" onclick="closeForm()">Cancel</button>
+        <button class="submit-btn" onclick="submitForm()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Modal -->
+  <div class="modal" id="filterPopup">
+    <div class="modal-content">
+      <h3>Filter Employees</h3>
+      <label>First Name: <input type="text" id="filterFirstName" /></label>
+      <label>Department: <input type="text" id="filterDepartment" /></label>
+      <label>Role: <input type="text" id="filterRole" /></label>
+      <div class="form-actions">
+        <button class="cancel-btn" onclick="closeFilterPopup()">Cancel</button>
+        <button class="apply-btn" onclick="applyFilter()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Employee Directory App. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let employees = [];
+    let filteredEmployees = [];
+    let currentPage = 1;
+    let pageSize = 10;
+    let editIndex = null;
+
+    fetch("data/employees.json")
+      .then(res => res.json())
+      .then(data => {
+        employees = data;
+        filteredEmployees = [...employees];
+        renderEmployees();
+      });
+
+    function changePageSize() {
+      pageSize = parseInt(document.getElementById("pageSize").value);
+      currentPage = 1;
+      renderEmployees();
+    }
+
+    function renderEmployees() {
+      const list = document.getElementById("employeeList");
+      list.innerHTML = "";
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const displayEmployees = filteredEmployees.slice(start, end);
+
+      displayEmployees.forEach((emp, index) => {
+        const div = document.createElement("div");
+        div.className = "employee-card";
+        div.innerHTML = `
+          <p><strong>${emp.firstName} ${emp.lastName}</strong></p>
+          <p>${emp.email}</p>
+          <p>${emp.department} - ${emp.role}</p>
+          <div class="button-row">
+            <button class="edit-btn" onclick="editEmployee(${start + index})">Edit</button>
+            <button class="delete-btn" onclick="deleteEmployee(${start + index})">Delete</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const pagination = document.getElementById("paginationControls");
+      pagination.innerHTML = "";
+      const pageCount = Math.ceil(filteredEmployees.length / pageSize);
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = i === currentPage ? "active" : "";
+        btn.onclick = () => {
+          currentPage = i;
+          renderEmployees();
+        };
+        pagination.appendChild(btn);
+      }
+    }
+
+    function openForm(edit = false) {
+      document.getElementById("employeeForm").style.display = "flex";
+      document.getElementById("formTitle").textContent = edit ? "Edit Employee" : "Add Employee";
+      document.querySelector(".submit-btn").textContent = edit ? "Update" : "Add";
+    }
+
+    function closeForm() {
+      document.getElementById("employeeForm").style.display = "none";
+      clearForm();
+      editIndex = null;
+    }
+
+    function clearForm() {
+      document.getElementById("firstName").value = "";
+      document.getElementById("lastName").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("department").value = "";
+      document.getElementById("role").value = "";
+    }
+
+    function submitForm() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const department = document.getElementById("department").value.trim();
+      const role = document.getElementById("role").value.trim();
+
+      if (!firstName || !lastName || !email || !department || !role) {
+        alert("All fields are required.");
+        return;
+      }
+
+      const employee = { id: Date.now(), firstName, lastName, email, department, role };
+
+      if (editIndex !== null) {
+        employees[editIndex] = employee;
+      } else {
+        employees.push(employee);
+      }
+
+      filteredEmployees = employees;
+      closeForm();
+      renderEmployees();
+    }
+
+    function editEmployee(index) {
+      editIndex = index;
+      const emp = employees[index];
+      document.getElementById("firstName").value = emp.firstName;
+      document.getElementById("lastName").value = emp.lastName;
+      document.getElementById("email").value = emp.email;
+      document.getElementById("department").value = emp.department;
+      document.getElementById("role").value = emp.role;
+      openForm(true);
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("Are you sure you want to delete this employee?")) {
+        employees.splice(index, 1);
+        filteredEmployees = employees;
+        renderEmployees();
+      }
+    }
+
+    function applySearch() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      filteredEmployees = employees.filter(emp =>
+        emp.firstName.toLowerCase().includes(search) ||
+        emp.lastName.toLowerCase().includes(search) ||
+        emp.email.toLowerCase().includes(search)
+      );
+      currentPage = 1;
+      renderEmployees();
+    }
+
+    function sortEmployees() {
+      const sortBy = document.getElementById("sortSelect").value;
+      if (!sortBy) return;
+      filteredEmployees.sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
+      renderEmployees();
+    }
+
+    function openFilterPopup() {
+      document.getElementById("filterPopup").style.display = "flex";
+    }
+
+    function closeFilterPopup() {
+      document.getElementById("filterPopup").style.display = "none";
+    }
+
+    function applyFilter() {
+      const fname = document.getElementById("filterFirstName").value.toLowerCase();
+      const dept = document.getElementById("filterDepartment").value.toLowerCase();
+      const role = document.getElementById("filterRole").value.toLowerCase();
+
+      filteredEmployees = employees.filter(emp =>
+        emp.firstName.toLowerCase().includes(fname) &&
+        emp.department.toLowerCase().includes(dept) &&
+        emp.role.toLowerCase().includes(role)
+      );
+
+      closeFilterPopup();
+      currentPage = 1;
+      renderEmployees();
+    }
+
+    function resetEmployees() {
+      filteredEmployees = employees;
+      currentPage = 1;
+      renderEmployees();
+    }
+  </script>
+</body>
+</html>
